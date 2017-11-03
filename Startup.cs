@@ -38,8 +38,24 @@ namespace askitoniauthentication
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddMvc();
-        }
 
+            // configure identity server with in-memory stores, keys, clients and scopes
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+                .AddInMemoryPersistedGrants()
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddInMemoryApiResources(Config.GetApiResources())
+                .AddInMemoryClients(Config.GetClients())
+                .AddAspNetIdentity<ApplicationUser>();
+                
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = Configuration["Authentication:Google:ClientId"];
+                    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                });
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -55,7 +71,8 @@ namespace askitoniauthentication
 
             app.UseStaticFiles();
 
-            app.UseAuthentication();
+            // app.UseAuthentication(); // not needed, since UseIdentityServer adds the authentication middleware
+            app.UseIdentityServer();
 
             app.UseMvc(routes =>
             {
