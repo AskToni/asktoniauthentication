@@ -1,5 +1,3 @@
 bin/
 obj/
-wwwroot/lib
 .vscode/
-IdentityServer4.Quickstart.UI/
