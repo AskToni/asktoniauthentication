@@ -22,10 +22,26 @@ dotnet build
 
 # Run project
 dotnet run
-
 ```
-
 ## Endpoint
-
 The auth endpoint is live at:
 [http://asktoniauthentication.azurewebsites.net](http://asktoniauthentication.azurewebsites.net)
+
+## Hosting
+The identity server app is hosted in Azure.
+
+## Database
+The identity server is configured to use PostgreSQL. The database can queried using PGadmin in both development and prod.
+### Connection details
+The connection string is provided as a key-value pair with:
+
+key = "DbConnectStr"
+
+connectionstring = in format: "User ID={UserName};Password={Password};Host={Host};Port={Port};Database={DB Name};Pooling=true;
+And add "Use SSL Stream=True;SSL Mode=Require;TrustServerCertificate=True;" for heroku
+
+### Credentials in development environment
+These are dependant on your local installation of PostgreSQL. They should be stored in your dotnet user-secrets, the 
+### Credentials in production environment
+The production database is hosted in Heroku Postgre. The credentials to log in to the database can be obtained by logging in to the Heroku web portal.
+
