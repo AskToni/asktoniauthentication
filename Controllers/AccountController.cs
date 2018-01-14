@@ -143,59 +143,59 @@ namespace askitoniauthentication.Controllers
             }
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> LoginWithRecoveryCode(string returnUrl = null)
-        {
-            // Ensure the user has gone through the username & password screen first
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
-            }
+        // [HttpGet]
+        // [AllowAnonymous]
+        // public async Task<IActionResult> LoginWithRecoveryCode(string returnUrl = null)
+        // {
+        //     // Ensure the user has gone through the username & password screen first
+        //     var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+        //     if (user == null)
+        //     {
+        //         throw new ApplicationException($"Unable to load two-factor authentication user.");
+        //     }
 
-            ViewData["ReturnUrl"] = returnUrl;
+        //     ViewData["ReturnUrl"] = returnUrl;
 
-            return View();
-        }
+        //     return View();
+        // }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model, string returnUrl = null)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+        // [HttpPost]
+        // [AllowAnonymous]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> LoginWithRecoveryCode(LoginWithRecoveryCodeViewModel model, string returnUrl = null)
+        // {
+        //     if (!ModelState.IsValid)
+        //     {
+        //         return View(model);
+        //     }
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load two-factor authentication user.");
-            }
+        //     var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+        //     if (user == null)
+        //     {
+        //         throw new ApplicationException($"Unable to load two-factor authentication user.");
+        //     }
 
-            var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
+        //     var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
 
-            var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
+        //     var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
 
-            if (result.Succeeded)
-            {
-                _logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
-                return RedirectToLocal(returnUrl);
-            }
-            if (result.IsLockedOut)
-            {
-                _logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
-                return RedirectToAction(nameof(Lockout));
-            }
-            else
-            {
-                _logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
-                ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
-                return View();
-            }
-        }
+        //     if (result.Succeeded)
+        //     {
+        //         _logger.LogInformation("User with ID {UserId} logged in with a recovery code.", user.Id);
+        //         return RedirectToLocal(returnUrl);
+        //     }
+        //     if (result.IsLockedOut)
+        //     {
+        //         _logger.LogWarning("User with ID {UserId} account locked out.", user.Id);
+        //         return RedirectToAction(nameof(Lockout));
+        //     }
+        //     else
+        //     {
+        //         _logger.LogWarning("Invalid recovery code entered for user with ID {UserId}", user.Id);
+        //         ModelState.AddModelError(string.Empty, "Invalid recovery code entered.");
+        //         return View();
+        //     }
+        // }
 
         [HttpGet]
         [AllowAnonymous]
@@ -204,42 +204,42 @@ namespace askitoniauthentication.Controllers
             return View();
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Register(string returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
-        }
+        // [HttpGet]
+        // [AllowAnonymous]
+        // public IActionResult Register(string returnUrl = null)
+        // {
+        //     ViewData["ReturnUrl"] = returnUrl;
+        //     return View();
+        // }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-            if (ModelState.IsValid)
-            {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User created a new account with password.");
+        // [HttpPost]
+        // [AllowAnonymous]
+        // [ValidateAntiForgeryToken]
+        // public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+        // {
+        //     ViewData["ReturnUrl"] = returnUrl;
+        //     if (ModelState.IsValid)
+        //     {
+        //         var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+        //         var result = await _userManager.CreateAsync(user, model.Password);
+        //         if (result.Succeeded)
+        //         {
+        //             _logger.LogInformation("User created a new account with password.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+        //             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        //             var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+        //             await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
-                }
-                AddErrors(result);
-            }
+        //             await _signInManager.SignInAsync(user, isPersistent: false);
+        //             _logger.LogInformation("User created a new account with password.");
+        //             return RedirectToLocal(returnUrl);
+        //         }
+        //         AddErrors(result);
+        //     }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
-        }
+        //     // If we got this far, something failed, redisplay form
+        //     return View(model);
+        // }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
