@@ -6,6 +6,9 @@ Approach
 Using dotnet core Identity template, configured to use Postgre SQL as DB
 OOTB template is augmented by IdentityServer open source project
 
+## Client
+The sample client that I have been using to test out the flow is under "AskToniAuthJavaScriptClient"
+
 ## Build setup
 ```
 # Note:
@@ -43,5 +46,13 @@ And add "Use SSL Stream=True;SSL Mode=Require;TrustServerCertificate=True;" for 
 ### Credentials in development environment
 These are dependant on your local installation of PostgreSQL. They should be stored in your dotnet user-secrets, the 
 ### Credentials in production environment
-The production database is hosted in Heroku Postgre. The credentials to log in to the database can be obtained by logging in to the Heroku web portal.
+The production database is hosted in Heroku Postgre. The credentials to log in to the database can be obtained by logging in to the Heroku web portal. -> Ask John for Credentials
+
+### Database Schema
+#### AspNetUsers Table
+#### AspNetUser Logins
+
+### Tips for working with database
+#### Tips for PGAdmin 4
+1. If you right-click on a table, you can get some premade queries under "Scripts"
 

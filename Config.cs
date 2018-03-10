@@ -56,30 +56,25 @@ namespace askitoniauthentication
                     AllowedScopes = { "api1" }
                 },
 
-                // OpenID Connect hybrid flow and client credentials client (MVC)
+                // JavaScript Client
                 new Client
                 {
-                    ClientId = "mvc",
-                    ClientName = "MVC Client",
-                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+                    ClientId = "js",
+                    ClientName = "JavaScript Client",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowAccessTokensViaBrowser = true,
+                    RequireConsent = false,
 
-                    RequireConsent = true,
-
-                    ClientSecrets = 
-                    {
-                        new Secret("secret".Sha256())
-                    },
-
-                    RedirectUris = { "http://localhost:5002/signin-oidc" },
-                    PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+                    RedirectUris =           { "http://localhost:5003/callback.html" },
+                    PostLogoutRedirectUris = { "http://localhost:5003/index.html" },
+                    AllowedCorsOrigins =     { "http://localhost:5003" },
 
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "api1"
-                    },
-                    AllowOfflineAccess = true
+                    }
                 }
             };
         }

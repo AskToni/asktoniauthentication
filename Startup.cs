@@ -103,6 +103,9 @@ namespace askitoniauthentication
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseCors(builder =>
+                builder.WithOrigins("http://localhost:5003"));
         }
 
         private void InitializeDatabase(IApplicationBuilder app)
@@ -113,14 +116,23 @@ namespace askitoniauthentication
 
                 var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
                 context.Database.Migrate();
-                if (!context.Clients.Any())
+                // if (!context.Clients.Any())
+                // {
+                //     foreach (var client in Config.GetClients())
+                //     {
+                //         context.Clients.Add(client.ToEntity());
+                //     }
+                //     context.SaveChanges();
+                // }
+                foreach(var clientInDB in context.Clients) 
                 {
-                    foreach (var client in Config.GetClients())
-                    {
-                        context.Clients.Add(client.ToEntity());
-                    }
-                    context.SaveChanges();
+                    context.Clients.Remove(clientInDB);
                 }
+                foreach (var client in Config.GetClients())
+                {
+                    context.Clients.Add(client.ToEntity());
+                }
+                context.SaveChanges();
 
                 if (!context.IdentityResources.Any())
                 {
